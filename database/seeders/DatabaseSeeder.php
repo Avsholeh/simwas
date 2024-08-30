@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\TimPosisi;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,6 +21,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'superadmin@mail.com',
             'password' => Hash::make('superadmin'),
+        ]);
+
+        TimPosisi::factory()->createMany([
+            ['nama_posisi' => 'Penanggung Jawab'],
+            ['nama_posisi' => 'Pembantu Penanggung Jawab'],
+            ['nama_posisi' => 'Pengendali Teknis'],
+            ['nama_posisi' => 'Ketua Tim'],
+            ['nama_posisi' => 'Anggota Tim'],
         ]);
     }
 }
