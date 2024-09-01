@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'superadmin@mail.com',
             'password' => Hash::make('superadmin'),
+            'is_admin' => 1,
         ]);
 
         TimPosisi::factory()->createMany([
@@ -28,7 +29,14 @@ class DatabaseSeeder extends Seeder
             ['nama_posisi' => 'Pembantu Penanggung Jawab'],
             ['nama_posisi' => 'Pengendali Teknis'],
             ['nama_posisi' => 'Ketua Tim'],
+            ['nama_posisi' => 'Wakil Ketua Tim'],
             ['nama_posisi' => 'Anggota Tim'],
         ]);
+
+        if (env('APP_ENV') !== 'production') {
+            $this->call([
+                DevelopSeeder::class,
+            ]);
+        }
     }
 }

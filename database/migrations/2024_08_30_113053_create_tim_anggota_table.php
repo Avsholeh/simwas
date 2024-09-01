@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('tim_anggota', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tim_id');
-            $table->unsignedBigInteger('anggota_id');
+            $table->unsignedBigInteger('tim_id')->nullable();
+            $table->unsignedBigInteger('anggota_id')->nullable();
             $table->unsignedBigInteger('posisi_id')->nullable();
+            $table->softDeletes();
 
             $table->foreign('tim_id')->references('id')->on('tim');
             $table->foreign('anggota_id')->references('id')->on('anggota');

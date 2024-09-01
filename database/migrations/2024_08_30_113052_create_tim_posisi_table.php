@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tim_posisi', function (Blueprint $table) {
             $table->id();
             $table->string('nama_posisi');
+            $table->softDeletes();
         });
     }
 
