@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\Resources\TimPosisiResource\Pages;
 
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\TimPosisiResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
-class ViewUser extends ViewRecord
+class ViewTimPosisi extends ViewRecord
 {
-    protected static string $resource = UserResource::class;
+    protected static string $resource = TimPosisiResource::class;
 
     protected function getHeaderActions(): array
     {

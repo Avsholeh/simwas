@@ -8,7 +8,9 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 class UserResource extends Resource
@@ -19,7 +21,7 @@ class UserResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('navigation.setting');
+        return 'Pengaturan';
     }
 
     public static function form(Form $form): Form
@@ -38,7 +40,7 @@ class UserResource extends Resource
                         ->password()
                         ->maxLength(255)
                         ->minLength(8)
-                        ->required(fn () => Route::currentRouteName() === Pages\CreateUser::getRouteName())
+                        ->required(fn() => Route::currentRouteName() === Pages\CreateUser::getRouteName())
                         ->revealable(),
                 ])->columns(2)
             ]);
@@ -46,12 +48,17 @@ class UserResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+        $table = $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('anggota')
+                    ->label('Punya Anggota')
+                    ->icon(function ($record) {
+                        return $record->anggota->exists() ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('table.column_created_at'))
                     ->dateTime()
@@ -75,6 +82,14 @@ class UserResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+
+        if (!Auth::user()->is_developer) {
+            $table->modifyQueryUsing(function ($query) {
+                return $query->where('is_developer', 0);
+            });
+        }
+
+        return $table;
     }
 
     public static function getPages(): array
