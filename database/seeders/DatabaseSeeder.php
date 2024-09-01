@@ -18,10 +18,16 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@mail.com',
-            'password' => Hash::make('superadmin'),
-            'is_admin' => 1,
+            'name' => 'Developer',
+            'email' => 'developer@mail.com',
+            'password' => Hash::make('developer'),
+            'is_developer' => 1,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Admin Inspektorat',
+            'email' => 'admin@mail.com',
+            'password' => Hash::make('admin'),
         ]);
 
         TimPosisi::factory()->createMany([
