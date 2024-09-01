@@ -54,7 +54,13 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+
+            // Customizing the components
             ->spa()
-            ->defaultThemeMode(ThemeMode::Dark);
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->navigationGroups([
+                'Manajemen Tim',
+                'Pengaturan',
+            ]);
     }
 }
