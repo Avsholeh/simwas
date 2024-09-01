@@ -58,6 +58,7 @@ class AppPanelProvider extends PanelProvider
             // Customizing the components
             ->spa()
             ->defaultThemeMode(ThemeMode::Dark)
+            ->breadcrumbs(false)
             ->navigationGroups([
                 'Manajemen Tim',
                 'Pengaturan',
