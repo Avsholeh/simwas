@@ -16,6 +16,8 @@ class AnggotaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $slug = 'anggota';
+
     public static function getNavigationGroup(): ?string
     {
         return 'Manajemen Tim';

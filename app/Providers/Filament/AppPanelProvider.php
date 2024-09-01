@@ -60,8 +60,10 @@ class AppPanelProvider extends PanelProvider
             ->defaultThemeMode(ThemeMode::Dark)
             ->breadcrumbs(false)
             ->navigationGroups([
+                'Perencanaan',
                 'Manajemen Tim',
                 'Pengaturan',
-            ]);
+            ])
+            ->databaseTransactions();
     }
 }

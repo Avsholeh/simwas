@@ -17,7 +17,7 @@ class Spt extends Model
     {
         parent::boot();
 
-        static::created(function (Spt $spt) {
+        static::creating(function (Spt $spt) {
             $spt->created_by = Auth::id();
         });
 
@@ -33,5 +33,10 @@ class Spt extends Model
     public function pkpt(): BelongsTo
     {
         return $this->belongsTo(Pkpt::class, 'pkpt_id', 'id');
+    }
+
+    public function tim(): BelongsTo
+    {
+        return $this->belongsTo(Tim::class, 'tim_id', 'id');
     }
 }

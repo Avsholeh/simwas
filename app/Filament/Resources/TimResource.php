@@ -16,6 +16,8 @@ class TimResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $slug = 'tim';
+
     public static function getNavigationGroup(): ?string
     {
         return 'Manajemen Tim';
@@ -28,47 +30,52 @@ class TimResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make()->schema([
-                    Forms\Components\TextInput::make('nama_tim')
-                        ->required()
-                        ->maxLength(255)
-                        ->columnSpanFull(),
-                    Forms\Components\Textarea::make('deskripsi')
-                        ->maxLength(255),
-                    Forms\Components\Select::make('aktif')
-                        ->label('Status Aktif')
-                        ->required()
-                        ->default(1)
-                        ->options([
-                            1 => 'Aktif',
-                            0 => 'Tidak Aktif',
-                        ]),
-                ])->columns(2),
+        return $form->schema(static::formSchema());
+    }
 
-                Forms\Components\Section::make()->schema([
-                    Forms\Components\Repeater::make('timAnggota')
-                        ->label('Anggota Tim')
-                        ->relationship()
-                        ->defaultItems(0)
-                        ->schema([
-                            Forms\Components\Select::make('anggota_id')
-                                ->placeholder('Pilih Anggota')
-                                ->hiddenLabel()
-                                ->required()
-                                ->relationship('anggota.user', 'name')
-                                ->searchable()
-                                ->preload(),
-                            Forms\Components\Select::make('posisi_id')
-                                ->placeholder('Pilih Posisi')
-                                ->hiddenLabel()
-                                ->relationship('posisi', 'nama_posisi')
-                                ->searchable()
-                                ->preload(),
-                        ])->columns(2),
-                ]),
-            ]);
+    public static function formSchema(): array
+    {
+        return [
+            Forms\Components\Section::make()->schema([
+                Forms\Components\TextInput::make('nama_tim')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('aktif')
+                    ->label('Status Aktif')
+                    ->searchable()
+                    ->required()
+                    ->default(1)
+                    ->options([
+                        1 => 'Aktif',
+                        0 => 'Tidak Aktif',
+                    ]),
+                Forms\Components\Textarea::make('deskripsi')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+            ])->columns(2),
+
+            Forms\Components\Section::make()->schema([
+                Forms\Components\Repeater::make('timAnggota')
+                    ->label('Anggota Tim')
+                    ->relationship()
+                    ->defaultItems(0)
+                    ->schema([
+                        Forms\Components\Select::make('anggota_id')
+                            ->placeholder('Pilih Anggota')
+                            ->hiddenLabel()
+                            ->required()
+                            ->relationship('anggota.user', 'name')
+                            ->searchable()
+                            ->preload(),
+                        Forms\Components\Select::make('posisi_id')
+                            ->placeholder('Pilih Posisi')
+                            ->hiddenLabel()
+                            ->relationship('posisi', 'nama_posisi')
+                            ->searchable()
+                            ->preload(),
+                    ])->columns(2),
+            ]),
+        ];
     }
 
     public static function table(Table $table): Table
