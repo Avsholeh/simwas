@@ -10,7 +10,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
+use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 class SptResource extends Resource
 {
@@ -43,9 +47,9 @@ class SptResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make()->label('PKPT')->schema([
+            Forms\Components\Section::make('PKPT')->schema([
                 Forms\Components\Select::make('pkpt_id')
-                    ->label('PKPT')
+                    ->label('Nama Kegiatan')
                     ->searchable()
                     ->preload()
                     ->relationship('pkpt', 'nama_kegiatan')
@@ -67,7 +71,7 @@ class SptResource extends Resource
                     ->label('Nomor SPT')
                     ->maxLength(255)
                     ->columnSpanFull(),
-                    
+
                 Forms\Components\DatePicker::make('tanggal_mulai'),
                 Forms\Components\DatePicker::make('tanggal_selesai'),
 
@@ -84,7 +88,7 @@ class SptResource extends Resource
                         SptStatus::Disetujui->value => SptStatus::Disetujui->value,
                         SptStatus::Ditolak->value => SptStatus::Ditolak->value,
                         SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
-                        SptStatus::SedangBerjalan->value => SptStatus::SedangBerjalan->value,
+                        SptStatus::SedangProses->value => SptStatus::SedangProses->value,
                         SptStatus::Selesai->value => SptStatus::Selesai->value,
                     ])
                     ->required(),
@@ -96,12 +100,12 @@ class SptResource extends Resource
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('pkpt.nama_kegiatan')
-                ->label('PKPT (Kegiatan)')
+                ->label('Nama kegiatan')
                 ->limit(30)
                 ->wrap()
                 ->sortable(),
             Tables\Columns\TextColumn::make('tim.nama_tim')
-                ->label('Tim Pengawasan')
+                ->label('Tim pengawasan')
                 ->sortable(),
             Tables\Columns\TextColumn::make('no_spt')
                 ->label('Nomor SPT')
@@ -112,12 +116,6 @@ class SptResource extends Resource
             Tables\Columns\TextColumn::make('tanggal_selesai')
                 ->date('d M Y')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('verif_irban')
-                ->numeric()
-                ->sortable(),
-            Tables\Columns\TextColumn::make('verif_inspektur')
-                ->numeric()
-                ->sortable(),
             Tables\Columns\TextColumn::make('status')
                 ->badge()
                 ->color(fn($record) => match ($record->status) {
@@ -125,8 +123,9 @@ class SptResource extends Resource
                     SptStatus::Disetujui->value => Color::Green,
                     SptStatus::Ditolak->value => Color::Red,
                     SptStatus::Dibatalkan->value => Color::Gray,
-                    SptStatus::SedangBerjalan->value => Color::Yellow,
+                    SptStatus::SedangProses->value => Color::Yellow,
                     SptStatus::Selesai->value => Color::Green,
+                    default => null,
                 })
                 ->searchable(),
             Tables\Columns\TextColumn::make('created_at')
@@ -152,8 +151,63 @@ class SptResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
             ->filters([
-                //
-            ])
+                Tables\Filters\SelectFilter::make('pkpt')
+                    ->label('Nama kegiatan')
+                    ->relationship('pkpt', 'nama_kegiatan')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
+                            ->default(Carbon::now()->startOfMonth())
+                            ->hintIcon(
+                                icon: 'heroicon-m-question-mark-circle',
+                                tooltip: 'Dari tanggal pembuatan SPT'
+                            ),
+                        Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
+                            ->default(Carbon::now()->endOfMonth())
+                            ->hintIcon(
+                                icon: 'heroicon-m-question-mark-circle',
+                                tooltip: 'Sampai tanggal pembuatan SPT'
+                            ),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->columns(2),
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->searchable()
+                    ->options([
+                        SptStatus::Draft->value => SptStatus::Draft->value,
+                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
+                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
+                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
+                        SptStatus::SedangProses->value => SptStatus::SedangProses->value,
+                        SptStatus::Selesai->value => SptStatus::Selesai->value,
+                    ]),
+                Tables\Filters\SelectFilter::make('tim')
+                    ->label('Tim pengawasan')
+                    ->relationship('tim', 'nama_tim')
+                    ->searchable()
+                    ->preload(),
+            ], layout: FiltersLayout::AboveContent)
+            ->filtersFormColumns(2)
+            ->deferFilters()
+            ->filtersApplyAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->icon('heroicon-o-magnifying-glass')
+                    ->label('Search'),
+            )
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

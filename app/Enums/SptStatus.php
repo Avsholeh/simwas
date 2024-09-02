@@ -8,6 +8,6 @@ enum SptStatus: string
     case Disetujui = 'Disetujui';
     case Ditolak = 'Ditolak';
     case Dibatalkan = 'Dibatalkan';
-    case SedangBerjalan = 'Sedang Berjalan';
+    case SedangProses = 'Sedang Proses';
     case Selesai = 'Selesai';
 }
