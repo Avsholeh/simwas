@@ -81,17 +81,11 @@ class SptResource extends Resource
                     ->searchable()
                     ->options([
                         SptStatus::Draft->value => SptStatus::Draft->value,
-                        SptStatus::VerifikasiIrban->value => SptStatus::VerifikasiIrban->value,
-                        SptStatus::VerifikasiInspektur->value => SptStatus::VerifikasiInspektur->value,
                         SptStatus::Disetujui->value => SptStatus::Disetujui->value,
                         SptStatus::Ditolak->value => SptStatus::Ditolak->value,
                         SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
                         SptStatus::SedangBerjalan->value => SptStatus::SedangBerjalan->value,
                         SptStatus::Selesai->value => SptStatus::Selesai->value,
-                        SptStatus::Diperpanjang->value => SptStatus::Diperpanjang->value,
-                        SptStatus::Diperiksa->value => SptStatus::Diperiksa->value,
-                        SptStatus::Dikembalikan->value => SptStatus::Dikembalikan->value,
-                        SptStatus::Diketahui->value => SptStatus::Diketahui->value,
                     ])
                     ->required(),
             ])->columns(2)
@@ -103,6 +97,7 @@ class SptResource extends Resource
         return $table->columns([
             Tables\Columns\TextColumn::make('pkpt.nama_kegiatan')
                 ->label('PKPT (Kegiatan)')
+                ->limit(30)
                 ->wrap()
                 ->sortable(),
             Tables\Columns\TextColumn::make('tim.nama_tim')
@@ -127,17 +122,11 @@ class SptResource extends Resource
                 ->badge()
                 ->color(fn($record) => match ($record->status) {
                     SptStatus::Draft->value => Color::Gray,
-                    SptStatus::VerifikasiIrban->value => Color::Blue,
-                    SptStatus::VerifikasiInspektur->value => Color::Blue,
                     SptStatus::Disetujui->value => Color::Green,
                     SptStatus::Ditolak->value => Color::Red,
                     SptStatus::Dibatalkan->value => Color::Gray,
                     SptStatus::SedangBerjalan->value => Color::Yellow,
                     SptStatus::Selesai->value => Color::Green,
-                    SptStatus::Diperpanjang->value => Color::Yellow,
-                    SptStatus::Diperiksa->value => Color::Blue,
-                    SptStatus::Dikembalikan->value => Color::Red,
-                    SptStatus::Diketahui->value => Color::Green,
                 })
                 ->searchable(),
             Tables\Columns\TextColumn::make('created_at')
@@ -174,13 +163,6 @@ class SptResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
