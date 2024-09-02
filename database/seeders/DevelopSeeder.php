@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Pkpt;
 use App\Models\Tim;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -28,5 +29,7 @@ class DevelopSeeder extends Seeder
         $tim->each(function ($tim) use ($users) {
             $tim->anggota()->attach($users->random(3));
         });
+
+        Pkpt::factory(5)->create();
     }
 }

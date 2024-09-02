@@ -6,6 +6,7 @@ use App\Models\TimPosisi;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -15,8 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::factory()->create([
             'name' => 'Developer',
             'email' => 'developer@mail.com',
@@ -24,11 +23,11 @@ class DatabaseSeeder extends Seeder
             'is_developer' => 1,
         ]);
 
-        User::factory()->create([
+        Auth::login(User::factory()->create([
             'name' => 'Admin Inspektorat',
             'email' => 'admin@mail.com',
             'password' => Hash::make('admin'),
-        ]);
+        ]));
 
         TimPosisi::factory()->createMany([
             ['nama_posisi' => 'Penanggung Jawab'],
@@ -44,5 +43,7 @@ class DatabaseSeeder extends Seeder
                 DevelopSeeder::class,
             ]);
         }
+
+        Auth::logout();
     }
 }
