@@ -129,24 +129,30 @@ class SptResource extends Resource
                 })
                 ->searchable(),
             Tables\Columns\TextColumn::make('created_at')
+                ->label('Dibuat pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updated_at')
+                ->label('Diperbarui pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('deleted_at')
+                ->label('Dihapus pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('created_by')
+            Tables\Columns\TextColumn::make('creator.name')
+                ->label('Dibuat oleh')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('updated_by')
+            Tables\Columns\TextColumn::make('editor.name')
+                ->label('Diperbarui oleh')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('deleted_by')
+            Tables\Columns\TextColumn::make('deleter.name')
+                ->label('Dihapus oleh')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
         ])

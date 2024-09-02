@@ -39,4 +39,19 @@ class Spt extends Model
     {
         return $this->belongsTo(Tim::class, 'tim_id', 'id');
     }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+    
+    public function editor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
+    public function deleter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'deleted_by', 'id');
+    }
 }
