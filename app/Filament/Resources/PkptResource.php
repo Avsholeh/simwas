@@ -130,6 +130,7 @@ class PkptResource extends Resource
                     'Tinggi' => Color::Red,
                     'Sedang' => Color::Yellow,
                     'Rendah' => Color::Green,
+                    default => null,
                 })
                 ->searchable(),
             Tables\Columns\TextColumn::make('tanggal_mulai')
