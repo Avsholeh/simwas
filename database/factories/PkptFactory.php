@@ -20,7 +20,7 @@ class PkptFactory extends Factory
         return [
             'nama_kegiatan' => fake()->sentence,
             'objek_pengawasan' => fake()->company,
-            'keterangan_pengawasan' => fake()->paragraph,
+            'keterangan_pengawasan' => fake()->sentence,
             'tingkat_risiko' => fake()->randomElement(['Rendah', 'Sedang', 'Tinggi']),
             'tujuan' => fake()->paragraph,
             'sasaran' => fake()->paragraph,
@@ -38,7 +38,7 @@ class PkptFactory extends Factory
             'created_by' => \App\Models\User::factory(),
             'updated_by' => null,
             'deleted_by' => null,
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now()->subMonth(fake()->randomElement([0, 1, 2, 3])),
             'updated_at' => Carbon::now(),
             'deleted_at' => null,
         ];

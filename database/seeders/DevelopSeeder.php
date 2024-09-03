@@ -30,6 +30,6 @@ class DevelopSeeder extends Seeder
             $tim->anggota()->attach($users->random(3));
         });
 
-        Pkpt::factory(5)->create();
+        Pkpt::factory(100)->create();
     }
 }

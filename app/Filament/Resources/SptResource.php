@@ -13,7 +13,6 @@ use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
 
 class SptResource extends Resource
 {
@@ -131,7 +130,7 @@ class SptResource extends Resource
                 ->label('Dibuat pada')
                 ->dateTime()
                 ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: false),
             Tables\Columns\TextColumn::make('updated_at')
                 ->label('Diperbarui pada')
                 ->dateTime()
@@ -159,13 +158,35 @@ class SptResource extends Resource
                 Tables\Filters\Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
-                            ->default(Carbon::now()->startOfMonth())
+                            ->live()
+                            ->suffixAction(
+                                function (Forms\Get $get) {
+                                    if (!empty($get('created_from'))) {
+                                        return Forms\Components\Actions\Action::make('clear')
+                                            ->icon('heroicon-c-x-circle')
+                                            ->action(function (Forms\Set $set) {
+                                                $set('created_from', null);
+                                            });
+                                    }
+                                }
+                            )
                             ->hintIcon(
                                 icon: 'heroicon-m-question-mark-circle',
                                 tooltip: 'Dari tanggal pembuatan SPT'
                             ),
                         Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
-                            ->default(Carbon::now()->endOfMonth())
+                            ->live()
+                            ->suffixAction(
+                                function (Forms\Get $get) {
+                                    if (!empty($get('created_until'))) {
+                                        return Forms\Components\Actions\Action::make('clear')
+                                            ->icon('heroicon-c-x-circle')
+                                            ->action(function (Forms\Set $set) {
+                                                $set('created_until', null);
+                                            });
+                                    }
+                                }
+                            )
                             ->hintIcon(
                                 icon: 'heroicon-m-question-mark-circle',
                                 tooltip: 'Sampai tanggal pembuatan SPT'

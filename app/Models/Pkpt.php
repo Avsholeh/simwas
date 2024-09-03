@@ -30,6 +30,7 @@ class Pkpt extends Model
         static::created(function ($pkpt) {
             $pkpt->spt()->create([
                 'status' => SptStatus::Draft,
+                'created_at' => $pkpt->created_at,
             ]);
         });
 

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PkptResource\Pages;
 use App\Models\Pkpt;
-use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -137,12 +136,6 @@ class PkptResource extends Resource
                     default => null,
                 })
                 ->searchable(),
-            Tables\Columns\TextColumn::make('tanggal_mulai')
-                ->date('d M Y')
-                ->sortable(),
-            Tables\Columns\TextColumn::make('tanggal_selesai')
-                ->date('d M Y')
-                ->sortable(),
             Tables\Columns\TextColumn::make('biaya')
                 ->prefix('Rp ')
                 ->numeric()
@@ -151,21 +144,26 @@ class PkptResource extends Resource
                 ->label('Penanggung jawab')
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
+                ->label('Dibuat pada')
                 ->dateTime()
                 ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: false),
             Tables\Columns\TextColumn::make('updated_at')
+                ->label('Diperbarui pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('deleted_at')
+                ->label('Dihapus pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('creator.name')
+                ->label('Dibuat oleh')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('editor.name')
+                ->label('Diperbarui oleh')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
@@ -173,13 +171,35 @@ class PkptResource extends Resource
                 Tables\Filters\Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
-                            ->default(Carbon::now()->startOfMonth())
+                            ->live()
+                            ->suffixAction(
+                                function (Forms\Get $get) {
+                                    if (!empty($get('created_from'))) {
+                                        return Forms\Components\Actions\Action::make('clear')
+                                            ->icon('heroicon-c-x-circle')
+                                            ->action(function (Forms\Set $set) {
+                                                $set('created_from', null);
+                                            });
+                                    }
+                                }
+                            )
                             ->hintIcon(
                                 icon: 'heroicon-m-question-mark-circle',
                                 tooltip: 'Dari tanggal pembuatan PKPT'
                             ),
                         Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
-                            ->default(Carbon::now()->endOfMonth())
+                            ->live()
+                            ->suffixAction(
+                                function (Forms\Get $get) {
+                                    if (!empty($get('created_until'))) {
+                                        return Forms\Components\Actions\Action::make('clear')
+                                            ->icon('heroicon-c-x-circle')
+                                            ->action(function (Forms\Set $set) {
+                                                $set('created_until', null);
+                                            });
+                                    }
+                                }
+                            )
                             ->hintIcon(
                                 icon: 'heroicon-m-question-mark-circle',
                                 tooltip: 'Sampai tanggal pembuatan PKPT'
