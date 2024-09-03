@@ -35,6 +35,7 @@ class Lha extends Model
     protected function casts(): array
     {
         return [
+            'file' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

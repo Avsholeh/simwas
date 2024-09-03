@@ -54,6 +54,7 @@ class AppPanelProvider extends PanelProvider
             ->breadcrumbs(false)
             ->navigationGroups([
                 'Perencanaan',
+                'Pelaksanaan',
                 'Manajemen Tim',
                 'Pengaturan',
             ])
