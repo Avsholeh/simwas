@@ -49,7 +49,7 @@ class Pkpt extends Model
 
     public function inspektur(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'inspektur_id', 'id');
+        return $this->belongsTo(User::class, 'inspektur_id', 'id')->whereNot('is_developer', 1);
     }
 
     public function creator(): BelongsTo

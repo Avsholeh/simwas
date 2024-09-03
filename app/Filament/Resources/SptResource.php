@@ -12,7 +12,6 @@ use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
@@ -157,11 +156,6 @@ class SptResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
             ->filters([
-                Tables\Filters\SelectFilter::make('pkpt')
-                    ->label('Nama kegiatan')
-                    ->relationship('pkpt', 'nama_kegiatan')
-                    ->searchable()
-                    ->preload(),
                 Tables\Filters\Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
@@ -189,6 +183,11 @@ class SptResource extends Resource
                             );
                     })
                     ->columns(2),
+                Tables\Filters\SelectFilter::make('pkpt')
+                    ->label('Nama kegiatan')
+                    ->relationship('pkpt', 'nama_kegiatan')
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status')
                     ->searchable()
@@ -209,7 +208,7 @@ class SptResource extends Resource
             ->filtersFormColumns(2)
             ->deferFilters()
             ->filtersApplyAction(
-                fn(Action $action) => $action
+                fn(Tables\Actions\Action $action) => $action
                     ->button()
                     ->icon('heroicon-o-magnifying-glass')
                     ->label('Search'),

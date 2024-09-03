@@ -4,12 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PkptResource\Pages;
 use App\Models\Pkpt;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PkptResource extends Resource
 {
@@ -79,6 +82,7 @@ class PkptResource extends Resource
                     ->required(),
                 Forms\Components\DatePicker::make('tanggal_selesai'),
                 Forms\Components\TextInput::make('biaya')
+                    ->prefix('Rp')
                     ->required()
                     ->columnSpanFull()
                     ->numeric(),
@@ -140,10 +144,11 @@ class PkptResource extends Resource
                 ->date('d M Y')
                 ->sortable(),
             Tables\Columns\TextColumn::make('biaya')
+                ->prefix('Rp ')
                 ->numeric()
                 ->sortable(),
             Tables\Columns\TextColumn::make('inspektur.name')
-                ->label('Penanggung Jawab')
+                ->label('Penanggung jawab')
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
                 ->dateTime()
@@ -165,8 +170,53 @@ class PkptResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
             ->filters([
-                //
-            ])
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
+                            ->default(Carbon::now()->startOfMonth())
+                            ->hintIcon(
+                                icon: 'heroicon-m-question-mark-circle',
+                                tooltip: 'Dari tanggal pembuatan PKPT'
+                            ),
+                        Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
+                            ->default(Carbon::now()->endOfMonth())
+                            ->hintIcon(
+                                icon: 'heroicon-m-question-mark-circle',
+                                tooltip: 'Sampai tanggal pembuatan PKPT'
+                            ),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->columns(2),
+                Tables\Filters\SelectFilter::make('tingkat_risiko')
+                    ->searchable()
+                    ->options(['Rendah', 'Sedang', 'Tinggi']),
+                Tables\Filters\SelectFilter::make('inspektur')
+                    ->relationship('inspektur', 'name')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('tahun_pelaksanaan')
+                    ->searchable()
+                    ->preload()
+                    ->options(Pkpt::select('tahun_pelaksanaan')->distinct()->get()->mapWithKeys(fn($item) => [$item->tahun_pelaksanaan => $item->tahun_pelaksanaan])),
+            ], layout: FiltersLayout::AboveContent)
+            ->filtersFormColumns(2)
+            ->deferFilters()
+            ->filtersApplyAction(
+                fn(Tables\Actions\Action $action) => $action
+                    ->button()
+                    ->icon('heroicon-o-magnifying-glass')
+                    ->label('Search'),
+            )
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
