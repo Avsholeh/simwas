@@ -182,10 +182,10 @@ class SptResource extends Resource
                     ->searchable()
                     ->options([
                         SptStatus::Draft->value => SptStatus::Draft->value,
-                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
-                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
-                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
                         SptStatus::SedangProses->value => SptStatus::SedangProses->value,
+                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
+                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
+                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
                         SptStatus::Selesai->value => SptStatus::Selesai->value,
                     ]),
                 Tables\Filters\SelectFilter::make('tim')
