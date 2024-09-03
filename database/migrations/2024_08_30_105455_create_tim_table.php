@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('deskripsi')->nullable();
             $table->tinyInteger('aktif')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
