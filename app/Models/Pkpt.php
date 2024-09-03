@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
+// Program Kerja Pengawasan Tahunan
 class Pkpt extends Model
 {
     use HasFactory, SoftDeletes, CascadesDeletes;
@@ -23,24 +24,33 @@ class Pkpt extends Model
     {
         parent::boot();
 
-        static::creating(function ($pkpt) {
-            $pkpt->created_by = Auth::id();
+        static::creating(function ($model) {
+            $model->created_by = Auth::id();
         });
 
-        static::created(function ($pkpt) {
-            $pkpt->spt()->create([
+        static::created(function ($model) {
+            $model->spt()->create([
                 'status' => SptStatus::Draft,
-                'created_at' => $pkpt->created_at,
+                'created_at' => $model->created_at,
             ]);
         });
 
-        static::updating(function ($pkpt) {
-            $pkpt->updated_by = Auth::id();
+        static::updating(function ($model) {
+            $model->updated_by = Auth::id();
         });
 
-        static::deleting(function ($pkpt) {
-            $pkpt->deleted_by = Auth::id();
+        static::deleting(function ($model) {
+            $model->deleted_by = Auth::id();
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
     }
 
     public function spt(): HasOne

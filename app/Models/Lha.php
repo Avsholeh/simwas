@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-// Surat Perintah Tugas
-class Spt extends Model
+// Laporan Hasil Audit
+class Lha extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'spt';
+    protected $table = 'lha';
 
     static function boot()
     {
@@ -38,16 +39,6 @@ class Spt extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    }
-
-    public function pkpt(): BelongsTo
-    {
-        return $this->belongsTo(Pkpt::class, 'pkpt_id', 'id');
-    }
-
-    public function tim(): BelongsTo
-    {
-        return $this->belongsTo(Tim::class, 'tim_id', 'id');
     }
 
     public function creator(): BelongsTo

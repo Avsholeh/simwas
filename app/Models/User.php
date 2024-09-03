@@ -39,12 +39,12 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::created(function ($user) {
-            $user->anggota()->create();
+        static::created(function ($model) {
+            $model->anggota()->create();
         });
 
-        static::restored(function ($user) {
-            $user->anggota()->restore();
+        static::restored(function ($model) {
+            $model->anggota()->restore();
         });
     }
 
