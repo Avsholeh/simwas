@@ -10,6 +10,18 @@
     @apply !text-xl;
 }
 
-.fi-section {
-    @apply !shadow-md;
+.fi-sidebar-header {
+    @apply !bg-primary-500 dark:!bg-gray-800;
+}
+
+.fi-topbar > nav {
+    @apply !bg-primary-600 dark:!bg-gray-900;
+}
+
+.fi-logo {
+    @apply !text-white;
+}
+
+.fi-sidebar {
+    @apply !bg-gray-200 dark:!bg-transparent shadow-md;
 }
