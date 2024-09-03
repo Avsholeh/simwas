@@ -56,9 +56,11 @@ class LhaResource extends Resource
                     ->disableToolbarButtons($disableToolbarButtonsList)
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('file')
+                    ->acceptedFileTypes(['application/pdf'])
                     ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
                         return (string) str()->ulid() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
                     })
+                    ->fetchFileInformation(false)
                     ->directory("LHA/" . now()->year)
                     ->multiple()
                     ->downloadable()
@@ -87,35 +89,7 @@ class LhaResource extends Resource
                     ->tooltip(fn($record) => empty($record->file) ? 'File belum ada atau tidak tersedia' : implode(', ', $record->file))
                     ->icon(fn(mixed $state) => !empty($state) ? 'heroicon-o-check-circle' : 'heroicon-s-x-circle')
                     ->color(fn(mixed $state) => !empty($state) ? Color::Green : Color::Red),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Dibuat pada')
-                    ->dateTime('d M Y')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Diperbarui pada')
-                    ->dateTime('d M Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->label('Dihapus pada')
-                    ->dateTime('d M Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_by')
-                    ->label('Dibuat oleh')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_by')
-                    ->label('Diperbarui oleh')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_by')
-                    ->label('Dihapus oleh')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                ...\App\Filament\DefaultTableColumn::make()
             ])
             ->filters([
                 //
