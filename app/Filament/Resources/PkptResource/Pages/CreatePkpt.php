@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePkpt extends CreateRecord
 {
     protected static string $resource = PkptResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

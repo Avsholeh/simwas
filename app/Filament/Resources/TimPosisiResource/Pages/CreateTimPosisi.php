@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateTimPosisi extends CreateRecord
 {
     protected static string $resource = TimPosisiResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
