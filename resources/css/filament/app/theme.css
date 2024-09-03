@@ -23,5 +23,25 @@
 }
 
 .fi-sidebar {
-    @apply !bg-gray-200 dark:!bg-transparent shadow-md;
+    @apply !bg-gray-200 dark:!bg-gray-900 shadow-md;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    @apply bg-gray-50 dark:bg-gray-950;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    @apply bg-primary-500 dark:bg-gray-900; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-600;
 }

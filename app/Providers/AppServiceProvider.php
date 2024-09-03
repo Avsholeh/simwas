@@ -7,11 +7,13 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+// use Filament\Support\Facades\FilamentAsset;
+// use Filament\Support\Assets\Js;
+// use Illuminate\Support\Facades\Vite;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+
+        // FilamentAsset::register([
+        //     Js::make('app-script', Vite::asset('resources/js/app.js')),
+        // ]);
 
         Table::configureUsing(function (Table $table): void {
             $table
