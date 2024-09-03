@@ -14,7 +14,7 @@ class TimResource extends Resource
 {
     protected static ?string $model = Tim::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-squares-2x2';
 
     protected static ?string $slug = 'tim';
 

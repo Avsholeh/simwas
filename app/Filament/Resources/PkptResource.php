@@ -17,7 +17,7 @@ class PkptResource extends Resource
 {
     protected static ?string $model = Pkpt::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-document-text';
 
     protected static ?string $slug = 'pkpt';
 
@@ -148,6 +148,7 @@ class PkptResource extends Resource
                 ->label('Dibuat pada')
                 ->dateTime()
                 ->sortable()
+                ->since()
                 ->toggleable(isToggledHiddenByDefault: false),
             Tables\Columns\TextColumn::make('updated_at')
                 ->label('Diperbarui pada')

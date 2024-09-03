@@ -10,14 +10,13 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class LhaResource extends Resource
 {
     protected static ?string $model = Lha::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-document-magnifying-glass';
 
     protected static ?string $slug = 'lha';
 

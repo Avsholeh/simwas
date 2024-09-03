@@ -18,7 +18,7 @@ class SptResource extends Resource
 {
     protected static ?string $model = Spt::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-document-text';
 
     protected static ?string $slug = 'spt';
 
@@ -124,6 +124,7 @@ class SptResource extends Resource
                 ->label('Dibuat pada')
                 ->dateTime()
                 ->sortable()
+                ->since()
                 ->toggleable(isToggledHiddenByDefault: false),
             Tables\Columns\TextColumn::make('updated_at')
                 ->label('Diperbarui pada')
