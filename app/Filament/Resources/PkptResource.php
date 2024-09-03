@@ -142,6 +142,7 @@ class PkptResource extends Resource
                 ->sortable(),
             Tables\Columns\TextColumn::make('inspektur.name')
                 ->label('Penanggung jawab')
+                ->wrap()
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
                 ->label('Dibuat pada')
@@ -167,68 +168,7 @@ class PkptResource extends Resource
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
-            ->filters([
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
-                            ->live()
-                            ->suffixAction(
-                                function (Forms\Get $get) {
-                                    if (!empty($get('created_from'))) {
-                                        return Forms\Components\Actions\Action::make('clear')
-                                            ->icon('heroicon-c-x-circle')
-                                            ->action(function (Forms\Set $set) {
-                                                $set('created_from', null);
-                                            });
-                                    }
-                                }
-                            )
-                            ->hintIcon(
-                                icon: 'heroicon-m-question-mark-circle',
-                                tooltip: 'Dari tanggal pembuatan PKPT'
-                            ),
-                        Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
-                            ->live()
-                            ->suffixAction(
-                                function (Forms\Get $get) {
-                                    if (!empty($get('created_until'))) {
-                                        return Forms\Components\Actions\Action::make('clear')
-                                            ->icon('heroicon-c-x-circle')
-                                            ->action(function (Forms\Set $set) {
-                                                $set('created_until', null);
-                                            });
-                                    }
-                                }
-                            )
-                            ->hintIcon(
-                                icon: 'heroicon-m-question-mark-circle',
-                                tooltip: 'Sampai tanggal pembuatan PKPT'
-                            ),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
-                    ->columns(2),
-                Tables\Filters\SelectFilter::make('tingkat_risiko')
-                    ->searchable()
-                    ->options(['Rendah', 'Sedang', 'Tinggi']),
-                Tables\Filters\SelectFilter::make('inspektur')
-                    ->relationship('inspektur', 'name')
-                    ->searchable()
-                    ->preload(),
-                Tables\Filters\SelectFilter::make('tahun_pelaksanaan')
-                    ->searchable()
-                    ->preload()
-                    ->options(Pkpt::select('tahun_pelaksanaan')->distinct()->get()->mapWithKeys(fn($item) => [$item->tahun_pelaksanaan => $item->tahun_pelaksanaan])),
-            ], layout: FiltersLayout::AboveContent)
+            ->filters(static::getFilters(), layout: FiltersLayout::AboveContent)
             ->filtersFormColumns(2)
             ->deferFilters()
             ->filtersApplyAction(
@@ -246,6 +186,72 @@ class PkptResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private static function getFilters(): array
+    {
+        return [
+            Tables\Filters\Filter::make('created_at')
+                ->form([
+                    Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
+                        ->live()
+                        ->suffixAction(function (Forms\Get $get) {
+                            if (!empty($get('created_from'))) {
+                                return Forms\Components\Actions\Action::make('clear')
+                                    ->icon('heroicon-c-x-circle')
+                                    ->action(function (Forms\Set $set) {
+                                        $set('created_from', null);
+                                    });
+                            }
+                        })
+                        ->hintIcon(
+                            icon: 'heroicon-m-question-mark-circle',
+                            tooltip: 'Dari tanggal pembuatan PKPT'
+                        ),
+                    Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
+                        ->live()
+                        ->suffixAction(function (Forms\Get $get) {
+                            if (!empty($get('created_until'))) {
+                                return Forms\Components\Actions\Action::make('clear')
+                                    ->icon('heroicon-c-x-circle')
+                                    ->action(function (Forms\Set $set) {
+                                        $set('created_until', null);
+                                    });
+                            }
+                        })
+                        ->hintIcon(
+                            icon: 'heroicon-m-question-mark-circle',
+                            tooltip: 'Sampai tanggal pembuatan PKPT'
+                        ),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                })
+                ->columns(2),
+            Tables\Filters\SelectFilter::make('tingkat_risiko')
+                ->searchable()
+                ->options([
+                    'Rendah' => 'Rendah',
+                    'Sedang' => 'Sedang',
+                    'Tinggi' => 'Tinggi',
+                ]),
+            Tables\Filters\SelectFilter::make('inspektur')
+                ->relationship('inspektur', 'name')
+                ->searchable()
+                ->preload(),
+            Tables\Filters\SelectFilter::make('tahun_pelaksanaan')
+                ->searchable()
+                ->preload()
+                ->options(Pkpt::select('tahun_pelaksanaan')->distinct()->get()->mapWithKeys(fn($item) => [$item->tahun_pelaksanaan => $item->tahun_pelaksanaan])),
+        ];
     }
 
     public static function getRelations(): array

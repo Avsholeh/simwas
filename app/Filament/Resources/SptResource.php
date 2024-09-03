@@ -73,20 +73,14 @@ class SptResource extends Resource
                 Forms\Components\DatePicker::make('tanggal_mulai'),
                 Forms\Components\DatePicker::make('tanggal_selesai'),
 
-                Forms\Components\TextInput::make('verif_irban')
-                    ->label('Verifikasi Irban'),
-
-                Forms\Components\TextInput::make('verif_inspektur')
-                    ->label('Verifikasi Inspektur'),
-
                 Forms\Components\Select::make('status')
                     ->searchable()
                     ->options([
                         SptStatus::Draft->value => SptStatus::Draft->value,
-                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
-                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
-                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
                         SptStatus::SedangProses->value => SptStatus::SedangProses->value,
+                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
+                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
+                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
                         SptStatus::Selesai->value => SptStatus::Selesai->value,
                     ])
                     ->required(),

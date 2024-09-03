@@ -16,6 +16,8 @@ class AnggotaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $slug = 'anggota';
 
     public static function getNavigationGroup(): ?string
@@ -43,7 +45,8 @@ class AnggotaResource extends Resource
                             }
                         )
                         ->searchable()
-                        ->preload(),
+                        ->preload()
+                        ->helperText('Untuk menambahkan anggota, pengguna harus terdaftar didalam sistem'),
                 ])
             ]);
     }
