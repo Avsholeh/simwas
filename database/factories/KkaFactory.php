@@ -17,7 +17,10 @@ class KkaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'judul' => fake()->sentence(),
+            'keterangan' => fake()->paragraph(),
+            'created_at' => now()->subMonth(fake()->randomElement([0, 1, 2, 3])),
+            'created_by' => \App\Models\User::factory(),
         ];
     }
 }

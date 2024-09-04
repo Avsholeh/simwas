@@ -11,17 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kka', function (Blueprint $table) {
+        Schema::create('temuan', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('lha_id');
+            $table->integer('tahun_pelaksanaan');
+            $table->string('objek_pengawasan');
             $table->mediumText('judul');
-            $table->mediumText('keterangan')->nullable();
-            $table->mediumText('file')->nullable();
+            $table->mediumText('kode')->nullable();
+            $table->text('kondisi');
+            $table->text('kriteria');
+            $table->text('akibat');
+            $table->mediumText('rekomendasi_kode')->nullable();
+            $table->text('rekomendasi_temuan');
+            $table->mediumText('bukti_pendukung')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();
+
+            $table->foreign('lha_id')->references('id')->on('lha');
         });
     }
 
@@ -30,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kkas');
+        Schema::dropIfExists('temuans');
     }
 };

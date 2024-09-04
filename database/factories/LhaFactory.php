@@ -17,7 +17,11 @@ class LhaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nomor' => fake()->randomNumber(1) . '/LHA/' . date('Y'),
+            'tanggal' => now()->subMonth(fake()->randomElement([0, 1, 2, 3])),
+            'deskripsi' => fake()->sentence(3),
+            'created_at' => now()->subMonth(fake()->randomElement([0, 1, 2, 3])),
+            'created_by' => \App\Models\User::factory(),
         ];
     }
 }

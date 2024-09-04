@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Kka;
+use App\Models\Lha;
 use App\Models\Pkpt;
+use App\Models\Temuan;
 use App\Models\Tim;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DevelopSeeder extends Seeder
 {
@@ -15,6 +19,12 @@ class DevelopSeeder extends Seeder
      */
     public function run(): void
     {
+        foreach (Storage::allFiles() as $file) {
+            if (str_ends_with($file, '.pdf')) {
+                unlink(storage_path('app/' . $file));
+            }
+        }
+
         $users = User::factory(3)->create();
 
         $tim = Tim::factory()->createMany([
@@ -30,6 +40,9 @@ class DevelopSeeder extends Seeder
             $tim->anggota()->attach($users->random(3));
         });
 
-        Pkpt::factory(100)->create();
+        Pkpt::factory(4)->create();
+        Lha::factory(2)->create();
+        Kka::factory(3)->create();
+        Temuan::factory(3)->create();
     }
 }
