@@ -87,16 +87,21 @@ class TemuanResource extends Resource
                     ->disableToolbarButtons($disableToolbarButtonsList)
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\FileUpload::make('bukti_pendukung')
-                    ->acceptedFileTypes(['application/pdf', 'image/*'])
-                    ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
-                        return (string) str()->ulid() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-                    })
-                    ->fetchFileInformation(false)
-                    ->directory("Temuan/" . now()->year)
-                    ->multiple()
-                    ->downloadable()
-                    ->columnSpanFull(),
+                Forms\Components\Repeater::make('files')
+                    ->relationship('files')
+                    ->schema([
+                        Forms\Components\FileUpload::make('url')
+                            ->hiddenLabel()
+                            ->acceptedFileTypes(['application/pdf', 'image/*'])
+                            ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
+                                return (string) str()->ulid() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+                            })
+                            ->fetchFileInformation(false)
+                            ->directory("Temuan/" . now()->year)
+                            ->downloadable(),
+                        Forms\Components\TextInput::make('keterangan'),
+                    ])
+                    ->columnSpanFull()
             ])->columns(2)
         ]);
     }
@@ -120,8 +125,7 @@ class TemuanResource extends Resource
                 ->limit(20)
                 ->tooltip(fn($record) => strip_tags($record->judul))
                 ->searchable(),
-            Tables\Columns\IconColumn::make('bukti_pendukung')
-                ->tooltip(fn($record) => empty($record->bukti_pendukung) ? 'File belum ada atau tidak tersedia' : implode(', ', $record->bukti_pendukung))
+            Tables\Columns\IconColumn::make('files')
                 ->icon(fn(mixed $state) => !empty($state) ? 'heroicon-o-check-circle' : 'heroicon-s-x-circle')
                 ->color(fn(mixed $state) => !empty($state) ? Color::Green : Color::Red),
             ...\App\Filament\DefaultTableColumn::make()
@@ -133,13 +137,6 @@ class TemuanResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

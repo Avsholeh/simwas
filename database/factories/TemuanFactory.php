@@ -27,7 +27,6 @@ class TemuanFactory extends Factory
             'akibat' => fake()->paragraph(),
             'rekomendasi_kode' => fake()->randomNumber() . '/TM-RK/' . now()->year,
             'rekomendasi_temuan' => fake()->paragraph(),
-            'bukti_pendukung' => [fake()->file(base_path('tests/Files'), storage_path('app/public'), false)],
             'created_at' => now()->subMonth(fake()->randomElement([0, 1, 2, 3])),
             'created_by' => \App\Models\User::factory(),
         ];

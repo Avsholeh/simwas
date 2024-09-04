@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 class Temuan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadesDeletes;
 
     protected $table = 'temuan';
+
+    protected $cascadeDeletes = ['files'];
 
     static function boot()
     {
@@ -22,7 +26,7 @@ class Temuan extends Model
             $model->created_by = Auth::id();
         });
 
-        static::updating(function ($model) {
+        static::saving(function ($model) {
             $model->updated_by = Auth::id();
         });
 
@@ -34,7 +38,6 @@ class Temuan extends Model
     protected function casts(): array
     {
         return [
-            'bukti_pendukung' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -59,5 +62,10 @@ class Temuan extends Model
     public function lha(): BelongsTo
     {
         return $this->belongsTo(Lha::class, 'lha_id', 'id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(TemuanFiles::class, 'temuan_id', 'id');
     }
 }

@@ -23,7 +23,6 @@ return new class extends Migration
             $table->text('akibat');
             $table->mediumText('rekomendasi_kode')->nullable();
             $table->text('rekomendasi_temuan');
-            $table->mediumText('bukti_pendukung')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

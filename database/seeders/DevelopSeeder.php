@@ -6,6 +6,7 @@ use App\Models\Kka;
 use App\Models\Lha;
 use App\Models\Pkpt;
 use App\Models\Temuan;
+use App\Models\TemuanFiles;
 use App\Models\Tim;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -43,6 +44,6 @@ class DevelopSeeder extends Seeder
         Pkpt::factory(4)->create();
         Lha::factory(2)->create();
         Kka::factory(3)->create();
-        Temuan::factory(3)->create();
+        Temuan::factory(3)->has(TemuanFiles::factory()->count(2), 'files')->create();
     }
 }
