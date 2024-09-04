@@ -46,7 +46,7 @@ class KkaResource extends Resource
 
         return $form->schema([
             Forms\Components\Section::make()->schema([
-                Forms\Components\TextInput::make('nama')
+                Forms\Components\TextInput::make('judul')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\RichEditor::make('keterangan')
@@ -70,9 +70,9 @@ class KkaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
+                Tables\Columns\TextColumn::make('judul')
                     ->limit(20)
-                    ->tooltip(fn($record) => $record->nama)
+                    ->tooltip(fn($record) => $record->judul)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')
                     ->limit(20)

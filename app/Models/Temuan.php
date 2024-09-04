@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class Kka extends Model
+class Temuan extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'kka';
+    protected $table = 'temuan';
 
     static function boot()
     {
@@ -34,7 +34,7 @@ class Kka extends Model
     protected function casts(): array
     {
         return [
-            'file' => 'array',
+            'bukti_pendukung' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -54,5 +54,10 @@ class Kka extends Model
     public function deleter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'deleted_by', 'id');
+    }
+
+    public function lha(): BelongsTo
+    {
+        return $this->belongsTo(Lha::class, 'lha_id', 'id');
     }
 }

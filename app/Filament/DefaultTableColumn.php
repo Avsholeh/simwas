@@ -10,27 +10,17 @@ class DefaultTableColumn
     {
         return [
             Tables\Columns\TextColumn::make('created_at')
-                ->label('Dibuat pada')
+                ->label('Dibuat')
                 ->since()
                 ->tooltip(fn($record) => $record->created_at->format('d M Y H:i:s'))
+                ->description(fn($record) => $record->creator?->name)
                 ->sortable(),
             Tables\Columns\TextColumn::make('updated_at')
-                ->label('Diperbarui pada')
-                ->dateTime('d M Y H:i:s')
+                ->label('Diperbarui')
+                ->since()
+                ->tooltip(fn($record) => $record->created_at->format('d M Y H:i:s'))
                 ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('deleted_at')
-                ->label('Dihapus pada')
-                ->dateTime('d M Y H:i:s')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('creator.name')
-                ->label('Dibuat oleh')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('editor.name')
-                ->label('Diperbarui oleh')
-                ->sortable()
+                ->description(fn($record) => $record->editor?->name)
                 ->toggleable(isToggledHiddenByDefault: true),
         ];
     }
