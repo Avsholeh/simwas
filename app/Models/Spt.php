@@ -23,7 +23,7 @@ class Spt extends Model
             $model->created_by = Auth::id();
         });
 
-        static::updating(function ($model) {
+        static::saving(function ($model) {
             $model->updated_by = Auth::id();
         });
 

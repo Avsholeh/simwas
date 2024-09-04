@@ -35,7 +35,7 @@ class Pkpt extends Model
             ]);
         });
 
-        static::updating(function ($model) {
+        static::saving(function ($model) {
             $model->updated_by = Auth::id();
         });
 
