@@ -6,6 +6,7 @@ use App\Filament\Resources\PkptResource\Pages;
 use App\Models\Pkpt;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
@@ -162,6 +163,31 @@ class PkptResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('spt')
+                    ->icon('heroicon-m-document-text')
+                    ->label('')
+                    ->tooltip('Surat Perintah Tugas')
+                    ->action(function (Pkpt $record) {
+                        if (empty($record->spt)) {
+                            Notifications\Notification::make()
+                                ->title('Surat Perintah Tugas belum diterbitkan!')
+                                ->warning()
+                                ->actions([
+                                    Notifications\Actions\Action::make('create')
+                                        ->label('Buat SPT Baru')
+                                        ->button()
+                                        ->url(fn() => SptResource::getUrl('create', ['pkpt_id' => $record->id]))
+                                        ->openUrlInNewTab()
+                                ])
+                                ->send();
+                        }
+                    })
+                    ->url(function (Pkpt $record): ?string {
+                        if (empty($record->spt)) return null;
+
+                        return SptResource::getUrl('view', ['record' => $record->spt]);
+                    })
+                    ->openUrlInNewTab()
             ]);
     }
 

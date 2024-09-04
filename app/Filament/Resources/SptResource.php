@@ -47,6 +47,7 @@ class SptResource extends Resource
         return $form->schema([
             Forms\Components\Section::make('PKPT')->schema([
                 Forms\Components\Select::make('pkpt_id')
+                    ->default(request()->pkpt_id)
                     ->label('Nama Kegiatan')
                     ->searchable()
                     ->preload()
@@ -78,10 +79,10 @@ class SptResource extends Resource
                     ->options([
                         SptStatus::Draft->value => SptStatus::Draft->value,
                         SptStatus::SedangProses->value => SptStatus::SedangProses->value,
-                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
-                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
-                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
-                        SptStatus::Selesai->value => SptStatus::Selesai->value,
+                        // SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
+                        // SptStatus::Ditolak->value => SptStatus::Ditolak->value,
+                        // SptStatus::Disetujui->value => SptStatus::Disetujui->value,
+                        // SptStatus::Selesai->value => SptStatus::Selesai->value,
                     ])
                     ->required(),
             ])->columns(2)
@@ -136,6 +137,12 @@ class SptResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('pkpt')
+                    ->icon('heroicon-m-document-text')
+                    ->label('')
+                    ->tooltip('Program Kerja Pengawasan Tahunan')
+                    ->url(fn(Spt $record): string => PkptResource::getUrl('view', ['record' => $record->pkpt]))
+                    ->openUrlInNewTab()
             ]);
     }
 
