@@ -70,6 +70,8 @@ class KkaResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('no')
+                    ->rowIndex(),
                 Tables\Columns\TextColumn::make('judul')
                     ->limit(20)
                     ->tooltip(fn($record) => $record->judul)
@@ -81,7 +83,8 @@ class KkaResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('file')
                     ->tooltip(fn($record) => empty($record->file) ? 'File belum ada atau tidak tersedia' : implode(', ', $record->file))
-                    ->icon(fn(mixed $state) => !empty($state) ? 'heroicon-o-check-circle' : 'heroicon-s-x-circle')
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-c-x-mark')
                     ->color(fn(mixed $state) => !empty($state) ? Color::Green : Color::Red),
                 ...\App\Filament\DefaultTableColumn::make()
             ])
@@ -91,11 +94,6 @@ class KkaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

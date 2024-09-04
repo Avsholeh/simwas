@@ -104,6 +104,8 @@ class TemuanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
+            Tables\Columns\TextColumn::make('no')
+                ->rowIndex(),
             Tables\Columns\TextColumn::make('lha.nomor')
                 ->label('Nomor LHA')
                 ->numeric()

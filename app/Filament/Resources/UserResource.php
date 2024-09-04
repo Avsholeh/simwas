@@ -48,39 +48,35 @@ class UserResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $table = $table
-            ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('anggota')
-                    ->label('Punya Anggota')
-                    ->icon(function ($record) {
-                        return $record->anggota->exists() ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
-                    }),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('table.column_created_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('table.column_updated_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
+        $table = $table->columns([
+            Tables\Columns\TextColumn::make('no')
+                ->rowIndex(),
+            Tables\Columns\TextColumn::make('name')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('email')
+                ->searchable(),
+            Tables\Columns\IconColumn::make('anggota')
+                ->label('Punya Anggota')
+                ->icon(function ($record) {
+                    return $record->anggota->exists() ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
+                }),
+            Tables\Columns\TextColumn::make('created_at')
+                ->label(__('table.column_created_at'))
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                ->label(__('table.column_updated_at'))
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
 
         if (!Auth::user()->is_developer) {

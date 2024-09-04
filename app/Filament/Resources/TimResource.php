@@ -80,42 +80,38 @@ class TimResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('nama_tim')
-                    ->limit(30)
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('deskripsi')
-                    ->limit(30)
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('anggota.user.name')
-                    ->label('Anggota')
-                    ->listWithLineBreaks(),
-                Tables\Columns\TextColumn::make('statusAktif')
-                    ->color(fn(Tim $record) => $record->aktif ? 'success' : 'danger')
-                    ->badge()
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
+        return $table->columns([
+            Tables\Columns\TextColumn::make('no')
+                ->rowIndex(),
+            Tables\Columns\TextColumn::make('nama_tim')
+                ->limit(30)
+                ->searchable(),
+            Tables\Columns\TextColumn::make('deskripsi')
+                ->limit(30)
+                ->searchable(),
+            Tables\Columns\TextColumn::make('anggota.user.name')
+                ->label('Anggota')
+                ->listWithLineBreaks(),
+            Tables\Columns\TextColumn::make('statusAktif')
+                ->color(fn(Tim $record) => $record->aktif ? 'success' : 'danger')
+                ->badge()
+                ->numeric()
+                ->sortable(),
+            Tables\Columns\TextColumn::make('created_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

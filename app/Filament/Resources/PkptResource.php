@@ -117,6 +117,10 @@ class PkptResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
+            Tables\Columns\TextColumn::make('no')
+                ->rowIndex(),
+            Tables\Columns\TextColumn::make('no')
+                ->rowIndex(),
             Tables\Columns\TextColumn::make('nama_kegiatan')
                 ->tooltip(fn(Pkpt $record) => $record->nama_kegiatan)
                 ->limit(30)
@@ -158,11 +162,6 @@ class PkptResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

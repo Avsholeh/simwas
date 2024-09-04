@@ -50,7 +50,7 @@ class AppPanelProvider extends PanelProvider
 
             // Customizing the components
             ->spa()
-            ->defaultThemeMode(ThemeMode::Dark)
+            ->defaultThemeMode(ThemeMode::System)
             ->viteTheme('resources/css/filament/app/theme.css')
             ->breadcrumbs(false)
             ->navigationGroups([

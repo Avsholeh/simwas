@@ -91,6 +91,8 @@ class SptResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
+            Tables\Columns\TextColumn::make('no')
+                ->rowIndex(),
             Tables\Columns\TextColumn::make('pkpt.nama_kegiatan')
                 ->label('Nama kegiatan')
                 ->limit(30)
@@ -122,78 +124,7 @@ class SptResource extends Resource
                 ->searchable(),
             ...\App\Filament\DefaultTableColumn::make(),
         ])
-            ->filters([
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
-                            ->live()
-                            ->suffixAction(
-                                function (Forms\Get $get) {
-                                    if (!empty($get('created_from'))) {
-                                        return Forms\Components\Actions\Action::make('clear')
-                                            ->icon('heroicon-c-x-circle')
-                                            ->action(function (Forms\Set $set) {
-                                                $set('created_from', null);
-                                            });
-                                    }
-                                }
-                            )
-                            ->hintIcon(
-                                icon: 'heroicon-m-question-mark-circle',
-                                tooltip: 'Dari tanggal pembuatan SPT'
-                            ),
-                        Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
-                            ->live()
-                            ->suffixAction(
-                                function (Forms\Get $get) {
-                                    if (!empty($get('created_until'))) {
-                                        return Forms\Components\Actions\Action::make('clear')
-                                            ->icon('heroicon-c-x-circle')
-                                            ->action(function (Forms\Set $set) {
-                                                $set('created_until', null);
-                                            });
-                                    }
-                                }
-                            )
-                            ->hintIcon(
-                                icon: 'heroicon-m-question-mark-circle',
-                                tooltip: 'Sampai tanggal pembuatan SPT'
-                            ),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
-                    ->columns(2),
-                Tables\Filters\SelectFilter::make('pkpt')
-                    ->label('Nama kegiatan')
-                    ->relationship('pkpt', 'nama_kegiatan')
-                    ->searchable()
-                    ->preload(),
-                Tables\Filters\SelectFilter::make('status')
-                    ->label('Status')
-                    ->searchable()
-                    ->options([
-                        SptStatus::Draft->value => SptStatus::Draft->value,
-                        SptStatus::SedangProses->value => SptStatus::SedangProses->value,
-                        SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
-                        SptStatus::Ditolak->value => SptStatus::Ditolak->value,
-                        SptStatus::Disetujui->value => SptStatus::Disetujui->value,
-                        SptStatus::Selesai->value => SptStatus::Selesai->value,
-                    ]),
-                Tables\Filters\SelectFilter::make('tim')
-                    ->label('Tim pengawasan')
-                    ->relationship('tim', 'nama_tim')
-                    ->searchable()
-                    ->preload(),
-            ], layout: FiltersLayout::AboveContent)
+            ->filters(static::getFilters(), layout: FiltersLayout::AboveContent)
             ->filtersFormColumns(2)
             ->deferFilters()
             ->filtersApplyAction(
@@ -205,12 +136,82 @@ class SptResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
+    }
+
+    private static function getFilters(): array
+    {
+        return [
+            Tables\Filters\Filter::make('created_at')->form([
+                Forms\Components\DatePicker::make('created_from')->label('Dari tanggal')
+                    ->live()
+                    ->suffixAction(
+                        function (Forms\Get $get) {
+                            if (!empty($get('created_from'))) {
+                                return Forms\Components\Actions\Action::make('clear')
+                                    ->icon('heroicon-c-x-circle')
+                                    ->action(function (Forms\Set $set) {
+                                        $set('created_from', null);
+                                    });
+                            }
+                        }
+                    )
+                    ->hintIcon(
+                        icon: 'heroicon-m-question-mark-circle',
+                        tooltip: 'Dari tanggal pembuatan SPT'
+                    ),
+                Forms\Components\DatePicker::make('created_until')->label('Sampai tanggal')
+                    ->live()
+                    ->suffixAction(
+                        function (Forms\Get $get) {
+                            if (!empty($get('created_until'))) {
+                                return Forms\Components\Actions\Action::make('clear')
+                                    ->icon('heroicon-c-x-circle')
+                                    ->action(function (Forms\Set $set) {
+                                        $set('created_until', null);
+                                    });
+                            }
+                        }
+                    )
+                    ->hintIcon(
+                        icon: 'heroicon-m-question-mark-circle',
+                        tooltip: 'Sampai tanggal pembuatan SPT'
+                    ),
+            ])
+                ->query(
+                    fn(Builder $query, array $data): Builder => $query
+                        ->when(
+                            $data['created_from'],
+                            fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        )
+                )
+                ->columns(2),
+            Tables\Filters\SelectFilter::make('pkpt')
+                ->label('Nama kegiatan')
+                ->relationship('pkpt', 'nama_kegiatan')
+                ->searchable()
+                ->preload(),
+            Tables\Filters\SelectFilter::make('status')
+                ->label('Status')
+                ->searchable()
+                ->options([
+                    SptStatus::Draft->value => SptStatus::Draft->value,
+                    SptStatus::SedangProses->value => SptStatus::SedangProses->value,
+                    SptStatus::Dibatalkan->value => SptStatus::Dibatalkan->value,
+                    SptStatus::Ditolak->value => SptStatus::Ditolak->value,
+                    SptStatus::Disetujui->value => SptStatus::Disetujui->value,
+                    SptStatus::Selesai->value => SptStatus::Selesai->value,
+                ]),
+            Tables\Filters\SelectFilter::make('tim')
+                ->label('Tim pengawasan')
+                ->relationship('tim', 'nama_tim')
+                ->searchable()
+                ->preload(),
+        ];
     }
 
     public static function getPages(): array
