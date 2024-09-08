@@ -61,12 +61,13 @@ class UserResource extends Resource
                     return $record->anggota->exists() ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
                 }),
             Tables\Columns\TextColumn::make('created_at')
-                ->label(__('table.column_created_at'))
-                ->dateTime()
+                ->label('Dibuat pada')
+                ->since()
+                ->tooltip(fn($record) => $record->created_at->format('d M Y H:i:s'))
                 ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: false),
             Tables\Columns\TextColumn::make('updated_at')
-                ->label(__('table.column_updated_at'))
+                ->label('Diperbarui pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),

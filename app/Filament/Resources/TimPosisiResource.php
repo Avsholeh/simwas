@@ -40,12 +40,13 @@ class TimPosisiResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
+        return $form->schema([
+            Forms\Components\Section::make()->schema([
                 Forms\Components\TextInput::make('nama_posisi')
                     ->required()
                     ->maxLength(255),
-            ]);
+            ])
+        ]);
     }
 
     public static function table(Table $table): Table
